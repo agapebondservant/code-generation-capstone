@@ -1,2 +1,2 @@
-# code-generation-capstone
-AI Code Translation Project.
+# AI Code Translation Project
+
