@@ -1,0 +1,103 @@
+## Chapter 10 JSP Scripting Elements
+
+## Template Text
+
+In  many  cases,  a  large  percentage  of  your  JSP  page  just  consists  of  static HTML, known as template text . In almost all respects, this HTML looks just like normal HTML, follows all the same syntax rules, and is simply 'passed through' to  the  client  by  the  servlet  created  to  handle  the  page.  Not  only does the HTML look normal, it can be created by whatever tools you already are using for building Web pages. For example, I used Allaire's HomeSite for most of the JSP pages in this book.
+
+There are  two  minor  exceptions  to  the  'template  text  is  passed  straight through' rule. First, if you want to have &lt;% in the output, you need to put &lt;\% in  the  template  text.  Second,  if  you  want  a  comment  to  appear  in  the  JSP page but not in the resultant document, use
+
+&lt;%--JSP Comment --%&gt;
+
+HTML comments of the form
+
+&lt;!--HTML Comment --&gt;
+
+are passed through to the resultant HTML normally.
+
+## 10.2 JSP Expressions
+
+A JSP expression is used to insert values directly into the output. It has the following form:
+
+&lt;%= Java Expression %&gt;
+
+The  expression  is  evaluated,  converted  to  a  string,  and  inserted  in  the page. This evaluation is performed at run time (when the page is requested) and thus has full access to information about the request. For example, the following shows the date/time that the page was requested:
+
+Current time: &lt;%= new java.util.Date() %&gt;
+
+## Predefined Variables
+
+To simplify these expressions, you can use a number of predefined variables. These implicit objects are discussed in more detail in Section 10.5, but for the purpose of expressions, the most important ones are:
+
+- · request , the HttpServletRequest
+- · response , the HttpServletResponse
+
+Home page for this book: www.coreservlets.com; Home page for sequel: www.moreservlets.com. Servlet and JSP training courses by book's author: courses.coreservlets.com.
+
+## 10.2 JSP Expressions
+
+- · session , the HttpSession associated with the request (unless disabled with the session attribute of the page directive - see Section 11.4)
+- · out , the PrintWriter (a buffered version called JspWriter ) used to send output to the client
+
+```
+Here is an example:
+```
+
+```
+Your hostname: <%= request.getRemoteHost() %>
+```
+
+## XML Syntax for Expressions
+
+XML authors can use the following alternative syntax for JSP expressions:
+
+```
+<jsp:expression> Java Expression
+```
+
+&lt;/jsp:expression&gt;
+
+Note that  XML elements, unlike HTML ones, are case sensitive, so  be sure to use jsp:expression in lower case.
+
+## Using Expressions as Attribute Values
+
+As we will see later, JSP includes a number of elements that use XML syntax to  specify  various  parameters.  For  example,  the  following  example  passes "Marty" to  the setFirstName method of the object bound to the author variable. Don't worry if you don't understand the details of this code; it is discussed in detail in Chapter 13 (Using JavaBeans with JSP). My purpose here is simply to point out the use of the name , property , and value attributes.
+
+```
+<jsp:setProperty name="author" property="firstName" value="Marty" />
+```
+
+Most attributes require the value to be a fixed string enclosed in either single or double quotes, as in the example above. A few attributes, however, permit you to use a JSP expression that is computed at request time. The value attribute of jsp:setProperty is one such example, so the following code is perfectly legal:
+
+```
+<jsp:setProperty name="user" property="id" value='<%= "UserID" + Math.random() %>' />
+```
+
+Table 10.1 lists the attributes that permit a request-time value as in this example.
+
+Home page for this book: www.coreservlets.com; Home page for sequel: www.moreservlets.com. Servlet and JSP training courses by book's author: courses.coreservlets.com.
+
+## Chapter 10 JSP Scripting Elements
+
+## Table 10.1  Attributes That Permit JSP Expressions
+
+| Element Name                                                               | Attribute Name(s)   |
+|----------------------------------------------------------------------------|---------------------|
+| jsp:setProperty (see Section 13.3, 'Setting Bean Properties')              | name value          |
+| jsp:include (see Chapter 12, 'Including Files and Applets in JSP           | page                |
+| Documents')                                                                |                     |
+| jsp:forward (see Chapter 15, 'Integrating Servlets and JSP')               | page                |
+| jsp:param (see Chapter 12, 'Including Files and Applets in JSP Documents') | value               |
+
+## Example
+
+Listing 10.1 gives an example JSP page; Figure 10-1 shows the result. Notice that  I  included META tags  and  a  style  sheet  link  in  the HEAD section  of  the HTML page. It is good practice to include these elements, but there are two reasons why they are often omitted from pages generated by normal servlets. First, with servlets, it is tedious to generate the required println statements. With JSP, however, the format is simpler and you can make use of the code reuse options in your usual HTML building tool. Second, servlets cannot use the simplest form of relative URLs (ones that refer to files in the same directory  as  the  current  page)  since  the  servlet  directories  are  not  mapped  to URLs in the same manner as are URLs for normal Web pages. JSP pages, on the other hand, are installed in the normal Web page hierarchy on the server, and relative URLs are resolved properly. Thus, style sheets and JSP pages can be kept together in the same directory. The source code for the style sheet, like  all  code  shown  or  referenced  in  the  book,  can  be  downloaded  from http://www.coreservlets.com/ .
+
+## Listing 10.1 Expressions.jsp
+
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"&gt; &lt;HTML&gt; &lt;HEAD&gt; &lt;TITLE&gt;JSP Expressions&lt;/TITLE&gt; &lt;META NAME="author" CONTENT="Marty Hall"&gt; &lt;META NAME="keywords" CONTENT="JSP,expressions,JavaServer,Pages,servlets"&gt; &lt;META NAME="description" CONTENT="A quick example of JSP expressions."&gt; &lt;LINK REL=STYLESHEET HREF="JSP-Styles.css" TYPE="text/css"&gt; &lt;/HEAD&gt; &lt;BODY&gt; &lt;H2&gt;JSP Expressions&lt;/H2&gt; &lt;UL&gt; &lt;LI&gt;Current time: &lt;%= new java.util.Date() %&gt; &lt;LI&gt;Your hostname: &lt;%= request.getRemoteHost() %&gt; &lt;LI&gt;Your session ID: &lt;%= session.getId() %&gt; &lt;LI&gt;The &lt;CODE&gt;testParam&lt;/CODE&gt; form parameter: &lt;%= request.getParameter("testParam") %&gt; &lt;/UL&gt; &lt;/BODY&gt; &lt;/HTML&gt;
+
+Figure 10-1 Typical result of Expressions.jsp .
+
+<!-- image -->
+
+## 10.2 JSP Expressions

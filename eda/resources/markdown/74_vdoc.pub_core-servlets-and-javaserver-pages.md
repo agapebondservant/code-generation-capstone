@@ -1,0 +1,25 @@
+## Focusing Advertising
+
+Most  advertiser-funded  Web  sites  charge  their  advertisers  much  more  for displaying 'directed' ads than 'random' ads. Advertisers are generally willing to pay much more to have their ads shown to people that are known to have some interest in the general product category. For example, if you go to a search engine and do a search on 'Java Servlets,' the search site can charge an advertiser much more for showing you an ad for a servlet development environment than for an ad for an on-line travel agent specializing in Indonesia. On the other hand, if the search had been for 'Java Hotels,' the situation would  be  reversed.  Without  cookies,  the  sites  have  to  show  a  random  ad when you first arrive and haven't yet performed a search, as well as when you search on something that doesn't match any ad categories. Cookies let them remember 'Oh, that's the person who was searching for such and such previously' and display an appropriate (read 'high priced') ad instead of a random (read 'cheap') one.
+
+## 8.2 Some Problems with Cookies
+
+Providing convenience to the user and added value to the site owner is the purpose behind cookies. And despite much misinformation, cookies are not a serious security threat. Cookies are never interpreted or executed in any way and thus cannot be used to insert viruses or attack your system. Furthermore, since browsers generally only accept 20 cookies per site and 300 cookies total and since each cookie can be limited to 4 kilobytes, cookies cannot be used to fill up someone's disk or launch other denial of service attacks.
+
+However, even though cookies don't present a serious security threat, they can present a significant threat to privacy .  First, some people don't like the fact that search engines can remember that they're the user who usually does searches on certain topics. For example, they might search for job openings or  sensitive  health  data  and  don't  want  some  banner  ad  tipping  off  their coworkers next time they do a search. Even worse, two sites can share data on a user by each loading small images off the same third-party site, where that third  party  uses  cookies  and  shares  the  data  with  both  original  sites. (Netscape, however, provides a nice feature that lets you refuse cookies from sites other than that to which you connected, but without disabling cookies altogether.)  This  trick  of  associating  cookies  with  images  can  even  be exploited via e-mail if you use an HTML-enabled e-mail reader that 'sup-
+
+Home page for this book: www.coreservlets.com; Home page for sequel: www.moreservlets.com. Servlet and JSP training courses by book's author: courses.coreservlets.com.
+
+## 8.2 Some Problems with Cookies
+
+## Chapter 8 Handling Cookies
+
+ports' cookies and is associated with a browser. Thus, people could send you e-mail that loads images, attach cookies to those images, then identify you (e-mail address and all) if you subsequently visit their Web site. Boo.
+
+A second privacy problem occurs when sites rely on cookies for overly sensitive data. For example, some of the big on-line bookstores use cookies to remember users and let you order without reentering much of your personal information. This is not a particular problem since they don't actually display  the  full  credit  card  number  and  only  let  you  send  books  to  an address that was specified when you did enter the credit card in full or use the username and password. As a result, someone using your computer (or stealing your cookie file) could do no more harm than sending a big book order to your address, where the order could be refused. However, other companies might not be so careful, and an attacker who got access to someone's computer or cookie file could get on-line access to valuable personal information.  Even  worse,  incompetent  sites  might  embed  credit  card  or other sensitive information directly in the cookies themselves, rather than using innocuous identifiers that are only linked to real users on the server. This is dangerous, since most users don't view leaving their computer unattended in their office as being tantamount to leaving their credit card sitting on their desk.
+
+FOXTROT ' 1998 Bill Amend.  Reprinted with permission of UNIVERSAL PRESS SYNDICATE. All rights reserved
+
+<!-- image -->
+
+The point of  all this is  twofold.  First,  due  to  real  and  perceived  privacy problems, some users turn off cookies. So, even when you use cookies to give added value  to  a  site,  your  site  shouldn't depend on  them.  Second,  as  the author of servlets that use cookies, you should be careful not to use cookies for particularly sensitive information, since this would open users up to risks if somebody accessed their computer or cookie files.

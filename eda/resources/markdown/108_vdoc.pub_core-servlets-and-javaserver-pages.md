@@ -1,0 +1,8 @@
+' Prentice Hall and Sun Microsystems. Personal use only; do not redistribute.
+
+<!-- image -->
+
+he JavaBeans API provides a standard format for Java classes. Visual manipulation  tools  and  other  programs  can  automatically  discover information about classes that follow this format and can then create and manipulate the classes without the user having to explicitly write any code. Full coverage of JavaBeans is beyond the scope of this book. If you want details, pick up one of the many books on the subject or see the documentation and tutorials at http://java.sun.com/beans/docs/ . For the purposes of this chapter, all you need to know about beans are three simple points: T
+
+- 1. A bean class must have a zero-argument (empty) constructor. You can satisfy this requirement either by explicitly defining such a constructor or by omitting all constructors, which results in an empty constructor being created automatically. The empty constructor will be called when JSP elements create beans.
+- 2. A bean class should have no public instance variables (fields). I hope you already follow this practice and use accessor methods instead of allowing direct access to the instance variables. Use of accessor methods lets you impose constraints on variable values (e.g., have the setSpeed method of your Car class disallow negative speeds), allows you to change your internal data structures without changing the class interface (e.g.,
