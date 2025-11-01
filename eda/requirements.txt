@@ -22,3 +22,5 @@ deepeval==3.6.8
 trl==0.24.0
 peft==0.17.1
 optuna==4.5.0
+crewai==1.3.0
+crewai[tools]==1.3.0
