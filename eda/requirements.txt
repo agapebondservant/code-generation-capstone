@@ -21,3 +21,4 @@ hf_transfer==0.1.9
 deepeval==3.6.8
 trl==0.24.0
 peft==0.17.1
+optuna==4.5.0
