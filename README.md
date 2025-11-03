@@ -14,17 +14,21 @@
 ### Deploy the candidate model
 Run the following (update the model name, other paramters as needed):
 ```
-pip install vllm hf_transfer
+pip install vllm hf_transfer flashinfer-python
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
 export VLLM_ALLOW_RUNTIME_LORA_UPDATING=True
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
 export HF_TOKEN=<your hf token>
 
-python -m vllm.entrypoints.api_server \
---model ibm-granite/granite-8b-code-instruct-4k \
+python -m vllm.entrypoints.openai.api_server \
+--model ibm-granite/granite-4.0-h-tiny \
 --port 8000 \
 --enable-lora \
---dtype float16 \
---max-model-len 4096
+--dtype bfloat16 \
+--max-model-len 8192 \
+--trust-remote-code \
+--gpu-memory-utilization 0.9
 ```
 
 
