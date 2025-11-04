@@ -22,7 +22,7 @@ export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
 export HF_TOKEN=<your hf token>
 
 python -m vllm.entrypoints.openai.api_server \
---model ibm-granite/granite-4.0-h-tiny \
+--model oaawofolu/granite-4.0-h-tiny_d \
 --port 8000 \
 --enable-lora \
 --dtype bfloat16 \
