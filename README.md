@@ -6,15 +6,16 @@
 * Import `eda/jupyter` into your JupyterHub environment.
 * From JupyterHub, launch a terminal window and run `pip install -r requirements.txt`.
 * To run code_generation_eda.ipynb, also run `pip install -r requirements-eda.txt`. (EDA requires a separate environment.)
+* To run code_generation_agentic.ipynb, instead run `pip install --ignore-installed -r requirements-agentic.txt`.
 
 ### Set up environment variables
 * Make a copy of .env-template and rename it to .env.
 * Update the .env file with your credentials.
 
-### Deploy the candidate model
-Run the following (update the model name, other paramters as needed):
+### Deploy the baseline model
+Run the following (update the model name, other parameters as needed):
 ```
-pip install vllm hf_transfer flashinfer-python
+pip install vllm hf_transfer flashinfer-python transformers==4.56.0
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
 export VLLM_ALLOW_RUNTIME_LORA_UPDATING=True
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
@@ -29,5 +30,10 @@ python -m vllm.entrypoints.openai.api_server \
 --trust-remote-code \
 --gpu-memory-utilization 0.9
 ```
+
+### Deploy the candidate models
+At the time of deployment, there are currently unresolved issues with deploying the Granite 4 models with vLLM: https://github.com/vllm-project/vllm/issues/27620
+Hence, use **HuggingFace Inference Endpoints** to deploy the candidate models 
+(requires a paid plan): https://huggingface.co/inference
 
 

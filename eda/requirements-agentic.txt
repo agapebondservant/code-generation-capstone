@@ -1,4 +1,5 @@
-crewai
+crewai==0.193.2
+crewai_tools==0.76.0
 openai==1.90.0
 pynvml==12.0.0
 easygui==0.98.3
