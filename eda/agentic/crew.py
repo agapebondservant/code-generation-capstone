@@ -5,11 +5,11 @@
 from crewai import Agent, Task, Crew, Process, LLM
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from typing import List, Optional
-from pydantic import Field, BaseModel
+from typing import List
 from crewai_tools import SerperDevTool
 from crewai.tools import tool
 import os
+
 
 ##############################################################################
 # LLMs
@@ -23,14 +23,14 @@ main_llm = LLM(
     
     base_url=os.getenv('OPENROUTER_API_BASE'),
 
-    max_tokens = 100000,
+    max_tokens = 100_000,
 )
 
 baseline_llm = LLM(
     
     model=os.getenv('BASELINE_LLM_ID'),
     
-    api_key=os.getenv('HF_TOKEN'),
+    api_key=os.getenv('BASELINE_LLM_TOKEN'),
     
     base_url=os.getenv("BASELINE_LLM_URL"),
 
@@ -39,22 +39,22 @@ baseline_llm = LLM(
 
 lora_llm = LLM(
     
-    model=os.getenv('CANDIDATE_LLM_ID_LORA'),
+    model=os.getenv('CANDIDATE_LORA_LLM_ID'),
     
-    api_key=os.getenv('HF_TOKEN'),
+    api_key=os.getenv('CANDIDATE_LORA_LLM_TOKEN'),
     
-    base_url=os.getenv("CANDIDATE_LLM_URL_LORA"),
+    base_url=os.getenv("CANDIDATE_LORA_LLM_URL"),
 
     max_tokens = 8192,
 )
 
 dora_llm = LLM(
     
-    model=os.getenv('CANDIDATE_LLM_ID_DORA'),
+    model=os.getenv('CANDIDATE_DORA_LLM_ID'),
     
-    api_key=os.getenv('HF_TOKEN'),
+    api_key=os.getenv('CANDIDATE_DORA_LLM_TOKEN'),
     
-    base_url=os.getenv("CANDIDATE_LLM_URL_DORA"),
+    base_url=os.getenv("CANDIDATE_DORA_LLM_URL"),
 
     max_tokens = 8192,
 )
@@ -67,9 +67,9 @@ class CodeToSummary():
     
     tasks: List[Task]
 
-    tasks_config = "config/code-to-summary/tasks.yaml"
+    tasks_config = "code-to-summary/tasks.yaml"
 
-    agents_config = "config/code-to-summary/agents.yaml"
+    agents_config = "code-to-summary/agents.yaml"
         
     @agent
     def code_analyzer(self) -> Agent:
@@ -103,9 +103,9 @@ class SummaryToSpec():
     
     tasks: List[Task]
 
-    tasks_config = "config/summary-to-spec/tasks.yaml"
+    tasks_config = "summary-to-spec/tasks.yaml"
 
-    agents_config = "config/summary-to-spec/agents.yaml"
+    agents_config = "summary-to-spec/agents.yaml"
 
     @agent
     def code_scribe(self) -> Agent:
@@ -132,46 +132,50 @@ class SummaryToSpec():
             process=Process.sequential,
         )
 
-# @CrewBase
-# class SpecToCode():
-#     """Generates code in a given target language from a spec"""
+@CrewBase
+class SpecToCode():
+    """Generates code in a given target language from a spec"""
 
-#     agents: List[BaseAgent]
+    agents: List[BaseAgent]
     
-#     tasks: List[Task]
+    tasks: List[Task]
 
-#     agents_config = "agentic/config/agents.yaml"
-#     tasks_config = "agentic/config/tasks
+    agents_config = "spec-to-code/agents.yaml"
+    tasks_config = "spec-to-code/tasks.yaml"
 
-#     @agent
-#     def code_translator(self) -> Agent:
-#         return Agent(
-#             config=self.agents_config['code_translator'],
-#             verbose=True
-#         )
+    @agent
+    def code_translator(self) -> Agent:
+        return Agent(
+            config=self.agents_config['code_translator'],
+            verbose=True
+        )
 
-#     @agent
-#     def code_aggregator(self) -> Agent:
-#         return Agent(
-#             config=self.agents_config['code_aggregator'],
-#             verbose=True
-#         )
+    @task
+    def code_translator_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["code_translator"], 
+        )
 
-#     @agent
-#     def code_evaluator(self) -> Agent:
-#         return Agent(
-#             config=self.agents_config['code_evaluator'],
-#             verbose=True
-#         )
+    @agent
+    def code_writer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['code_writer'],
+            verbose=True
+        )
+
+    @task
+    def code_writer_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["code_writer"], 
+        )
     
+    @crew
+    def crew(self) -> Crew:
+        """Creates the Code Translation crew"""
 
-#     @crew
-#     def crew(self) -> Crew:
-#         """Creates the Code Translation crew"""
-
-#         return Crew(
-#             agents=self.agents, 
-#             tasks=self.tasks,
-#             process=Process.sequential,
-#             verbose=True,
-#         )
+        return Crew(
+            agents=self.agents, 
+            tasks=self.tasks,
+            process=Process.sequential,
+            verbose=True,
+        )

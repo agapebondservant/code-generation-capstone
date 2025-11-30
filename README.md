@@ -36,4 +36,9 @@ At the time of deployment, there are currently unresolved issues with deploying 
 Hence, use **HuggingFace Inference Endpoints** to deploy the candidate models 
 (requires a paid plan): https://huggingface.co/inference
 
+### Deploy the demo app
+To run the app locally:
+  1. Set up a virtual environment: python3.12 -m venv venv 
+  2. Install dependencies: pip install -r requirements.txt 
+  3. Start the app: python3 -m streamlit run app.py
 
