@@ -14,6 +14,8 @@ import app_utils
 from custom.dependency_parser import GithubTools
 from urllib.parse import urlparse
 import traceback
+import litellm
+litellm.set_verbose=True
 import nest_asyncio
 nest_asyncio.apply()
 
@@ -35,6 +37,10 @@ with col1:
                           placeholder="https://github.com/user/repo")
     git_branch_sha = st.text_input("Git branch",
                           placeholder="main, master, etc.")
+    selected_model = st.selectbox(
+        "Model",
+        ("", "CANDIDATE_LORA", "CANDIDATE_DORA"),
+    )
 
 with col2:
     st.markdown("<br>", unsafe_allow_html=True)
@@ -83,11 +89,11 @@ class CodeTranslationFlow(Flow):
             inputs = app_utils.get_aggregated_github_file_content(repo_url,
                                                            repo_files)
 
-            output = CodeToSummary().crew().kickoff(inputs={"inputs": inputs,
+            output = CodeToSummary(self.state["selected_model"]).crew().kickoff(inputs={"inputs": inputs,
 
                                                             "summary": running_summary,
 
-                                                            "output_base_path": f"{repo_id}/{cluster_id}"})
+                                                            "output_base_path": f"{repo_id}/{cluster_id}",})
 
             return output
 
@@ -110,10 +116,10 @@ class CodeTranslationFlow(Flow):
             running_summary += f"\n -{files_section}\n=======\n{output_section}"
 
         # Get spec from aggregate summary
-        spec = SummaryToSpec().crew().kickoff(
+        spec = SummaryToSpec(self.state["selected_model"]).crew().kickoff(
             inputs={"inputs": running_summary,
 
-                    "output_base_path": f"{self.state["repo_id"]}"})
+                    "output_base_path": f"{self.state["repo_id"]}",})
 
         return spec.raw
 
@@ -128,13 +134,13 @@ class CodeTranslationFlow(Flow):
 
                                             "output_base_path": f"{repo_id}",
 
-                                            "code_base_path": f"{repo_id}/code"})
+                                            "code_base_path": f"{repo_id}/code",})
 
 
 # Run the workflow when button is clicked
 if run_button:
-    if not git_repo or not git_branch_sha:
-        st.error("⚠️ Git repository and branch are required fields.")
+    if not git_repo or not git_branch_sha or not selected_model:
+        st.error("⚠️ Git repository, branch and model are required fields.")
     else:
         with status_container:
             with st.spinner("🤖 Working on it..."):
@@ -159,7 +165,9 @@ if run_button:
 
                                                   "repo_branch_sha": git_branch_sha,
 
-                                                  "repo_id": repo_id})
+                                                  "repo_id": repo_id,
+
+                                                  "selected_model": selected_model})
 
                     progress_bar.progress(100)
 

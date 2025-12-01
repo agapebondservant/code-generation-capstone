@@ -26,7 +26,7 @@ python -m vllm.entrypoints.openai.api_server \
 --model ibm-granite/granite-4.0-h-tiny \
 --port 8000 \
 --dtype bfloat16 \
---max-model-len 8192 \
+--max-model-len 128000 \
 --trust-remote-code \
 --gpu-memory-utilization 0.9
 ```

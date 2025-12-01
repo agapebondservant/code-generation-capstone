@@ -27,3 +27,7 @@ transformers==4.56.0
 peft==0.17.1
 trl==0.22.2
 dataframe_image==0.2.7
+ghapi==1.0.8
+jsonlines==4.0.0
+pypdfium2==5.1.0
+

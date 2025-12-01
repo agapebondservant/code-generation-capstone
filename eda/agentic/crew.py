@@ -26,42 +26,27 @@ main_llm = LLM(
     max_tokens = 100_000,
 )
 
-baseline_llm = LLM(
-    
-    model=os.getenv('BASELINE_LLM_ID'),
-    
-    api_key=os.getenv('BASELINE_LLM_TOKEN'),
-    
-    base_url=os.getenv("BASELINE_LLM_URL"),
+def get_selected_model(model_prefix: str):
+    print(model_prefix)
+    llm = LLM(
 
-    max_tokens = 8192,
-)
+        model=os.getenv(f'{model_prefix}_LLM_ID'),
 
-lora_llm = LLM(
-    
-    model=os.getenv('CANDIDATE_LORA_LLM_ID'),
-    
-    api_key=os.getenv('CANDIDATE_LORA_LLM_TOKEN'),
-    
-    base_url=os.getenv("CANDIDATE_LORA_LLM_URL"),
+        api_key=os.getenv(f'{model_prefix}_LLM_TOKEN'),
 
-    max_tokens = 8192,
-)
+        base_url=os.getenv(f'{model_prefix}_LLM_BASE'),
 
-dora_llm = LLM(
-    
-    model=os.getenv('CANDIDATE_DORA_LLM_ID'),
-    
-    api_key=os.getenv('CANDIDATE_DORA_LLM_TOKEN'),
-    
-    base_url=os.getenv("CANDIDATE_DORA_LLM_URL"),
+        max_tokens=100_000,
+    )
 
-    max_tokens = 8192,
-)
+    return llm
 
 @CrewBase
 class CodeToSummary():
     """Generates summary for the code in a given source language"""
+
+    def __init__(self, selected_model: str):
+        self.selected_model = selected_model
 
     agents: List[BaseAgent]
     
@@ -70,13 +55,15 @@ class CodeToSummary():
     tasks_config = "code-to-summary/tasks.yaml"
 
     agents_config = "code-to-summary/agents.yaml"
+
+    selected_model: str
         
     @agent
     def code_analyzer(self) -> Agent:
         return Agent(
             config=self.agents_config['code_analyzer'],
             verbose=False,
-            llm=main_llm,
+            llm=get_selected_model(self.selected_model),
         )
             
     @task
@@ -98,6 +85,8 @@ class CodeToSummary():
 @CrewBase
 class SummaryToSpec():
     """Generates spec file for the code + summary provided in a given source language"""
+    def __init__(self, selected_model: str):
+        self.selected_model = selected_model
 
     agents: List[BaseAgent]
     
@@ -107,12 +96,14 @@ class SummaryToSpec():
 
     agents_config = "summary-to-spec/agents.yaml"
 
+    selected_model: str
+
     @agent
     def code_scribe(self) -> Agent:
         return Agent(
             config=self.agents_config['code_scribe'],
             verbose=False,
-            llm=main_llm,
+            llm=get_selected_model(self.selected_model),
         )
 
     @task
@@ -141,6 +132,7 @@ class SpecToCode():
     tasks: List[Task]
 
     agents_config = "spec-to-code/agents.yaml"
+
     tasks_config = "spec-to-code/tasks.yaml"
 
     @agent
