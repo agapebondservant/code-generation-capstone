@@ -130,11 +130,11 @@ class CodeTranslationFlow(Flow):
 
         repo_id = self.state["repo_id"]
 
-        SpecToCode(self.state["selected_model"]).crew().kickoff(inputs={"spec": spec,
+        code = SpecToCode(self.state["selected_model"]).crew().kickoff(
+            inputs={"spec": spec, "output_base_path": f"{repo_id}",
+                    "code_base_path": f"{repo_id}/code",})
 
-                                            "output_base_path": f"{repo_id}",
-
-                                            "code_base_path": f"{repo_id}/code",})
+        return code.raw
 
 
 # Run the workflow when button is clicked
