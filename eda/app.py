@@ -130,7 +130,7 @@ class CodeTranslationFlow(Flow):
 
         repo_id = self.state["repo_id"]
 
-        SpecToCode().crew().kickoff(inputs={"spec": spec,
+        SpecToCode(self.state["selected_model"]).crew().kickoff(inputs={"spec": spec,
 
                                             "output_base_path": f"{repo_id}",
 

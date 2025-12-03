@@ -19,7 +19,7 @@ pip install vllm hf_transfer flashinfer-python transformers==4.56.0
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
 export VLLM_ALLOW_RUNTIME_LORA_UPDATING=True
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+# export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
 export HF_TOKEN=<your hf token>
 
 python -m vllm.entrypoints.openai.api_server \

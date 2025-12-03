@@ -126,6 +126,8 @@ class SummaryToSpec():
 @CrewBase
 class SpecToCode():
     """Generates code in a given target language from a spec"""
+    def __init__(self, selected_model: str):
+        self.selected_model = selected_model
 
     agents: List[BaseAgent]
     
@@ -135,30 +137,35 @@ class SpecToCode():
 
     tasks_config = "spec-to-code/tasks.yaml"
 
+    selected_model: str
+
     @agent
     def code_translator(self) -> Agent:
         return Agent(
             config=self.agents_config['code_translator'],
-            verbose=True
+            verbose=True,
+            llm=get_selected_model(self.selected_model),
         )
 
     @task
     def code_translator_task(self) -> Task:
         return Task(
-            config=self.tasks_config["code_translator"], 
+            config=self.tasks_config["code_translator"],
         )
 
     @agent
     def code_writer(self) -> Agent:
         return Agent(
             config=self.agents_config['code_writer'],
-            verbose=True
+            verbose=True,
+            llm=get_selected_model(self.selected_model),
         )
 
     @task
     def code_writer_task(self) -> Task:
         return Task(
-            config=self.tasks_config["code_writer"], 
+            config=self.tasks_config["code_writer"],
+            llm=get_selected_model(self.selected_model),
         )
     
     @crew
